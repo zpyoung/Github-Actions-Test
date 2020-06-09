@@ -56,7 +56,6 @@ jobs:
 
     steps:
       - uses: FranzDiebold/github-env-vars-action@v1.0.0
-      - if: ${{ github.event == 'pull_request'}}
 
       - name: Checkout the repository
         uses: actions/checkout@v1
