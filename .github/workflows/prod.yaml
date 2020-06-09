@@ -37,4 +37,6 @@ jobs:
       - name: Install beta commands and deploy on cloud run
         run: |
           gcloud components install beta --quiet
-          gcloud beta run deploy $SERVICE_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api --project GCLOUD_PROJECT_ID --region us-east1 --platform managed
+          gcloud beta run deploy $SERVICE_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api --project $GCLOUD_PROJECT_ID --region us-east1 --platform managed
+      - name: Clean up images
+        run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api"
