@@ -44,5 +44,5 @@ jobs:
                     --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml
 
       - name: Clean up images from Google Cloud Container Registry
-        run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api"
+        run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api-prod"
 
