@@ -11,8 +11,26 @@ on:
     branches-ignore: [ development, master ]
   pull_request:
     branches-ignore: [ development, master ]
+  create:
+    branches-ignore: [ development, master ]
 
 jobs:
+  db:
+    name: Setup database for feature
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'create' && github.event.ref_type == 'branch'}}
+    steps:
+      - uses: FranzDiebold/github-env-vars-action@v1.0.0
+
+      - name: Authenticate into Google Cloud Platform
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: $GCLOUD_SERVICE_ACCOUNT_EMAIL
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+      - name: Clone the development Cloud SQL database
+        run: gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME
+
   deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
@@ -40,7 +58,6 @@ jobs:
       - name: Install beta commands and deploy on cloud run
         run: |
           gcloud components install beta --quiet
-          gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME
           gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
                     --project $GCLOUD_PROJECT_ID \
                     --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
@@ -50,7 +67,7 @@ jobs:
         run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api
 
   destroy:
-    name: Destroy old feature service
+    name: Destroy old feature services
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true}}
 
@@ -69,6 +86,6 @@ jobs:
       - name: Destroy
         run: |
           gcloud run services delete $GCLOUD_PROJECT_ID-feature-$GITHUB_REF_NAME --quiet \
-            --project $GCLOUD_PROJECT_ID \
-            --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
-            --flags-file .github/gcloud-flags.yaml
+                      --project $GCLOUD_PROJECT_ID \
+                      --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
+                      --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml
