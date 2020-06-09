@@ -58,13 +58,13 @@ jobs:
       - name: Install beta commands and deploy on cloud run
         run: |
           gcloud components install beta --quiet
-          gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
+          gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME \
                     --project $GCLOUD_PROJECT_ID \
                     --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
                     --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml
 
       - name: Clean up images from Google Cloud Container Registry
-        run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api --quiet
+        run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME --quiet
 
   destroy:
     name: Destroy old feature services
