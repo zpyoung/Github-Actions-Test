@@ -61,7 +61,7 @@ jobs:
           gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
                     --project $GCLOUD_PROJECT_ID \
                     --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
-                    --flags-file gcloud-flags.yaml
+                    --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml
 
       - name: Clean up images from Google Cloud Container Registry
         run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api --quiet
