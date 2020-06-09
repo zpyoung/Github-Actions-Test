@@ -4,5 +4,5 @@
 
 # Performance settings
 # --cpu: 2
---memory: 512MB
+--memory: 512Mi
 --timeout: 5m
