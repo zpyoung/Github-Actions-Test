@@ -43,5 +43,5 @@ jobs:
           gcloud components install beta --quiet
           gcloud beta run deploy $SERVICE_NAME-dev --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api-dev \
                               --project $GCLOUD_PROJECT_ID \
-                              --set-cloudsql-instances $GCLOUD_PROD_SQL_ID \
+                              --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME \
                               --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml
