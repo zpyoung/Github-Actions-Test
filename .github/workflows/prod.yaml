@@ -33,16 +33,16 @@ jobs:
         run: "gcloud auth configure-docker --quiet"
 
       - name: Push image to Google Cloud Container Registry
-        run: docker push gcr.io/$GCLOUD_PROJECT_ID/api
+        run: docker push gcr.io/$GCLOUD_PROJECT_ID/api-prod
 
       - name: Install beta commands and deploy on cloud run
         run: |
           echo ${{github.event}}
           gcloud components install beta --quiet
-          gcloud beta run deploy $SERVICE_NAME-prod --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
+          gcloud beta run deploy $SERVICE_NAME-prod --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api-prod \
                     --project $GCLOUD_PROJECT_ID \
                     --set-cloudsql-instances=$GCLOUD_PROD_SQL_ID \
-                    --flags-file=gcloud-flags.yaml
+                    --flags-file=../gcloud-flags.yaml
 
       - name: Clean up images from Google Cloud Container Registry
         run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api"
