@@ -54,4 +54,4 @@ jobs:
 
     steps:
       - name: Test action
-        run: "echo 'This is a push by ${{github.event.author}}'"
+        run: "echo 'This is a push by ${{github.event[author]}}'"
