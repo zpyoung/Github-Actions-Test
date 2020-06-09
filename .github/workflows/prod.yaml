@@ -1,0 +1,35 @@
+name: Production
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v1
+
+      - name: Build Docker image
+        run: |
+          docker build . --tag gcr.io/recharge-adapter/flaskapp
+      - name: Authenticate into Google Cloud Platform
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: beng-477@recharge-adapter.iam.gserviceaccount.com
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+      - name: Configure Docker to use Google Cloud Platform
+        run: "gcloud auth configure-docker --quiet"
+
+      - name: Push image to Google Cloud Container Registry
+        run: docker push gcr.io/recharge-adapter/flaskapp
+
+      - name: Install beta commands and deploy on cloud run
+        run: |
+          gcloud components install beta --quiet
+          gcloud beta run deploy rechargeprod --quiet --image gcr.io/recharge-adapter/flaskapp --project recharge-adapter --region us-east1 --platform managed
