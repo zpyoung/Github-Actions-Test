@@ -1,0 +1,8 @@
+--allow-unauthenticated:
+--region: us-east1
+--platform: managed
+
+# Performance settings
+# --cpu: 2
+--memory: 512MI
+--timout: 5m

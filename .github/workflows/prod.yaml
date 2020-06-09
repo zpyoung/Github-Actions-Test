@@ -3,7 +3,8 @@ name: Production
 env:
   GCLOUD_PROJECT_ID: clients-210617
   GCLOUD_SERVICE_ACCOUNT_EMAIL: google-run-admin@clients-210617.iam.gserviceaccount.com
-  SERVICE_NAME: test-api-prod
+  GCLOUD_PROD_SQL_ID: github-action-test
+  SERVICE_NAME: test-api
 
 on:
   push:
@@ -21,7 +22,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . --tag gcr.io/$GCLOUD_PROJECT_ID/api
+          docker build . --tag gcr.io/$GCLOUD_PROJECT_ID/api-prod
       - name: Authenticate into Google Cloud Platform
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
@@ -36,7 +37,12 @@ jobs:
 
       - name: Install beta commands and deploy on cloud run
         run: |
+          echo ${{github.event}}
           gcloud components install beta --quiet
-          gcloud beta run deploy $SERVICE_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api --project $GCLOUD_PROJECT_ID --region us-east1 --platform managed
-      - name: Clean up images
+          gcloud beta run deploy $SERVICE_NAME-prod --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
+                    --project $GCLOUD_PROJECT_ID \
+                    --set-cloudsql-instances=$GCLOUD_PROD_SQL_ID \
+                    --flags-file=gcloud-flags.yaml
+
+      - name: Clean up images from Google Cloud Container Registry
         run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api"

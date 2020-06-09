@@ -1,5 +1,11 @@
 name: Feature
 
+env:
+  GCLOUD_PROJECT_ID: clients-210617
+  GCLOUD_SERVICE_ACCOUNT_EMAIL: google-run-admin@clients-210617.iam.gserviceaccount.com
+  GCLOUD_DEV_SQL_NAME: github-action-test
+  SERVICE_NAME: test-api
+
 on:
   push:
     branches-ignore: [ development, master ]
@@ -9,7 +15,7 @@ on:
 jobs:
   deploy:
     name: Build and Deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: FranzDiebold/github-env-vars-action@v1.0.0
 
@@ -18,20 +24,50 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . --tag gcr.io/recharge-adapter/flaskapp
+          docker build . --tag gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME
       - name: Authenticate into Google Cloud Platform
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          service_account_email: beng-477@recharge-adapter.iam.gserviceaccount.com
+          service_account_email: $GCLOUD_SERVICE_ACCOUNT_EMAIL
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
       - name: Configure Docker to use Google Cloud Platform
         run: "gcloud auth configure-docker --quiet"
 
       - name: Push image to Google Cloud Container Registry
-        run: docker push gcr.io/recharge-adapter/flaskapp
+        run: docker push gcr.io/GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME
 
       - name: Install beta commands and deploy on cloud run
         run: |
           gcloud components install beta --quiet
-          gcloud beta run deploy recharge-feature-$GITHUB_REF_NAME --quiet --port 5000 --image gcr.io/recharge-adapter/flaskapp --project recharge-adapter --region us-east1 --platform managed --allow-unauthenticated
+          gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME
+          gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
+                    --project $GCLOUD_PROJECT_ID \
+                    --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
+                    --flags-file gcloud-flags.yaml
+
+      - name: Clean up images from Google Cloud Container Registry
+          run: "gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api"
+
+  destroy:
+    name: Destroy old feature service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: FranzDiebold/github-env-vars-action@v1.0.0
+      - if: ${{ github.event == 'pull_request'}}
+
+      - name: Checkout the repository
+        uses: actions/checkout@v1
+
+      - name: Authenticate into Google Cloud Platform
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: $GCLOUD_SERVICE_ACCOUNT_EMAIL
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+      - name: Destroy
+        run: |
+          gcloud run services delete $GCLOUD_PROJECT_ID-feature-$GITHUB_REF_NAME --quiet \
+            --project $GCLOUD_PROJECT_ID \
+            --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
+            --flags-file gcloud-flags.yaml
