@@ -37,7 +37,7 @@ jobs:
 
       - name: Install beta commands and deploy on cloud run
         run: |
-          echo ${{github.event.action}}
+          echo ${{github.event_name}}
           gcloud components install beta --quiet
           gcloud beta run deploy $SERVICE_NAME-prod --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api-prod \
                     --project $GCLOUD_PROJECT_ID \
