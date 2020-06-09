@@ -29,7 +29,7 @@ jobs:
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
       - name: Clone the development Cloud SQL database
-        run: gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME --project $GCLOUD_PROJECT_ID
+        run: gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME --project $GCLOUD_PROJECT_ID | tr '[:upper:]' '[:lower:]'
 
   deploy:
     name: Build and Deploy
@@ -42,7 +42,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . --tag gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME
+          docker build . --tag gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME | tr '[:upper:]' '[:lower:]'
       - name: Authenticate into Google Cloud Platform
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
@@ -53,18 +53,18 @@ jobs:
         run: "gcloud auth configure-docker --quiet"
 
       - name: Push image to Google Cloud Container Registry
-        run: docker push gcr.io/GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME
+        run: docker push gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME
 
       - name: Install beta commands and deploy on cloud run
         run: |
           gcloud components install beta --quiet
-          gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api \
+          gcloud beta run deploy $SERVICE_NAME-feature-$GITHUB_REF_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME \
                     --project $GCLOUD_PROJECT_ID \
-                    --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
-                    --flags-file gcloud-flags.yaml
+                    --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME  \
+                    --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml | tr '[:upper:]' '[:lower:]'
 
       - name: Clean up images from Google Cloud Container Registry
-        run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api --quiet
+        run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api-$GITHUB_REF_NAME --quiet | tr '[:upper:]' '[:lower:]'
 
   destroy:
     name: Destroy old feature services
@@ -88,4 +88,4 @@ jobs:
           gcloud run services delete $GCLOUD_PROJECT_ID-feature-$GITHUB_REF_NAME --quiet \
                       --project $GCLOUD_PROJECT_ID \
                       --set-cloudsql-instances $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME \
-                      --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml
+                      --flags-file $GITHUB_WORKSPACE/.github/gcloud_flags.yaml | tr '[:upper:]' '[:lower:]'
