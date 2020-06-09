@@ -50,7 +50,7 @@ jobs:
   test:
     name: Testing
     runs-on: ubuntu-latest
-    if: ${{ github.event_name}} == "push"
+    if: ${{ github.event_name}} == "push" && ${{github.event.sender.id}} == 36208748
 
     steps:
       - name: Test action
