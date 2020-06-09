@@ -23,7 +23,7 @@ jobs:
       - uses: FranzDiebold/github-env-vars-action@v1.0.0
 
       - name: Authenticate into Google Cloud Platform
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           service_account_email: $GCLOUD_SERVICE_ACCOUNT_EMAIL
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
@@ -64,7 +64,7 @@ jobs:
                     --flags-file gcloud-flags.yaml
 
       - name: Clean up images from Google Cloud Container Registry
-        run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api
+        run: gcloud container images delete gcr.io/$GCLOUD_PROJECT_ID/api --quiet
 
   destroy:
     name: Destroy old feature services
