@@ -29,7 +29,7 @@ jobs:
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
       - name: Clone the development Cloud SQL database
-        run: gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME
+        run: gcloud sql instances clone $GCLOUD_DEV_SQL_NAME $GCLOUD_DEV_SQL_NAME-feature-$GITHUB_REF_NAME --project $GCLOUD_PROJECT_ID
 
   deploy:
     name: Build and Deploy
