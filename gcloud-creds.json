@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "freefuse-io",
+  "private_key_id": "3bfbfb2d68c5bc96129abec7bf3123f17e0e7306",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDDX7HMAygyDkOO\nBJ9E09TWBOQ60k0x96sZtPe38K5okzGLxPgC6wQOM6jNVtqrqRQqT72yycPhEqMB\n56yTDWWHREOogFUyL7nU8eIIY7kO0S3VlDv+iV53rMtAi3UkCiLUfuUG98iNSaZK\nln60I1JGpbbaOzjrXIvJPGel2HE6grxGF3pWSLioUVhkeINniFtvwFLOIvo+sEgv\nhD5gc79dts6riYPQvLHmxddnpmDhCsSw74OSWIUE5GbLn6TQZNtKb9O7FcNicKtp\nLQO1o95LcsPGc9G2+AwT8/sK4nKlAVFDcrXr1VzVQtGR2haDiEha/aXrJ7IQfslp\nfUyyJOSVAgMBAAECggEAHMiSKe+UIi3CS5/INCxuOJqvYjAeAdzOZyLndQC/PTZk\nUAZ0kH990TbQqXHglPY7u5EUbkz18AieHdd7MA4C9Xb77cz8YECyRNpe9eP1PWbZ\ndRQZ86Ha2lBJgIibOTRKFdrdFJX4RMKDPo1l/NWQV0quQgAEHn67tGnTDlaxNdCP\nhdsfL8/DlSnz2BcmpL61qw6+4RY3a9fLXKi79//2jACAeolyy+3uQjMpPiovouNZ\nZCcI7BelT3PjTpfsamJnHxG9V7ivKpWUNq9pOVngSL6w6MAVhnyNVfbZWRRc0pJy\nQepo0nOopV/hPzaZxgKgRwPOK5p4xQKAHzwNLMuzuQKBgQDpX/anN9uCP/oP1iqm\nPCqwnCxzsAxa3RssUhsw4RVeEUh87EcStuUem7j/uLlq6mSl1eKmqm8j6SDPhdB3\nogjUlVrpkoU1FSO0U0WonO62ZdEk+qN1DFHUjb5ffPSCxWRICGW4yaRDmUyg8rMT\nBQ6RZAozWh321diUzgz5Vy3IyQKBgQDWUJkoXQVhLTvID5fx1wI1lK6Q9xID+wpJ\n+xBVT7K7vS5EukiQeGe20Y0y20dn04FAfs9LleUqijWzWgHD3ZvrF/udr6+xZ/Xu\ndHFnXZaq7tbIlyufa6gLYL14gTQnzoE1GhN4yR5HEc256mxa3JHmsxKfh7wD7mGH\n0m5VM72vbQKBgAyZQ6WPXGhRr9w/AZpr0RortDKipGgbW6Yu4Izo+dBUOoeT8dpO\nyVu3qGsVu9zLvpc9TrkUpl9X7I+Hd9OdicCAN6I4aLyO4ZiQjkgmALUUFhBa/4wI\nGDrTVB2vjzuoEFvbKDKroBSOKBbgQ06ZjUnIDszq5oc20DRoU0b6r9wRAoGAUy0G\ntAaeHt/qUrPSmbaDkf35XiO1pzvX+2xoI2QCDyDWAzB1FzTTs71SWomGBgKtKDXP\nCBvNzBvFyazGAJlSeQRe0A0uV+DsLraciKxm3EJDs6gP8xhaKMhL4KfscQKRXOWY\n5wjPKm/7cwtLMFxod6vKL4YDb1cmHQuLbJ/fH2UCgYEAgBuHGYI2R3hlMBdo/rHz\nhBdLNeVWnKxfkDTUlT92YHivEaBzQ2eqn84csSyNa/Rxf5e4ksG3EiU6Bt9rXI3v\n4UKO1AzRk2pu4q7L9JVrGmMzA6UL2f4ImgByhTXEqJYGtGrDIPp9HJ/QcqSEh83m\n26o1u2o+Qy4J+2fstx6aVbU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "freefuse-io@appspot.gserviceaccount.com",
+  "client_id": "112439297712683757552",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/freefuse-io%40appspot.gserviceaccount.com"
+}

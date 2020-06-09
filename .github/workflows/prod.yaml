@@ -1,5 +1,10 @@
 name: Production
 
+env:
+  GCLOUD_PROJECT_ID: clients-210617
+  GCLOUD_SERVICE_ACCOUNT_EMAIL: google-run-admin@clients-210617.iam.gserviceaccount.com
+  SERVICE_NAME: test-api-prod
+
 on:
   push:
     branches: [ master ]
@@ -16,20 +21,20 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . --tag gcr.io/recharge-adapter/flaskapp
+          docker build . --tag gcr.io/$GCLOUD_PROJECT_ID/api
       - name: Authenticate into Google Cloud Platform
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          service_account_email: beng-477@recharge-adapter.iam.gserviceaccount.com
+          service_account_email: $GCLOUD_SERVICE_ACCOUNT_EMAIL
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
       - name: Configure Docker to use Google Cloud Platform
         run: "gcloud auth configure-docker --quiet"
 
       - name: Push image to Google Cloud Container Registry
-        run: docker push gcr.io/recharge-adapter/flaskapp
+        run: docker push gcr.io/$GCLOUD_PROJECT_ID/api
 
       - name: Install beta commands and deploy on cloud run
         run: |
           gcloud components install beta --quiet
-          gcloud beta run deploy rechargeprod --quiet --image gcr.io/recharge-adapter/flaskapp --project recharge-adapter --region us-east1 --platform managed
+          gcloud beta run deploy $SERVICE_NAME --quiet --image gcr.io/$GCLOUD_PROJECT_ID/api --project GCLOUD_PROJECT_ID --region us-east1 --platform managed
