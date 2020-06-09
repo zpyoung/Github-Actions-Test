@@ -52,6 +52,8 @@ jobs:
   destroy:
     name: Destroy old feature service
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true}}
+
     steps:
       - uses: FranzDiebold/github-env-vars-action@v1.0.0
       - if: ${{ github.event == 'pull_request'}}
